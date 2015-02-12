@@ -99,6 +99,7 @@ namespace XenAdmin
         internal readonly VMStoragePage VMStoragePage = new VMStoragePage();
         internal readonly AdPage AdPage = new AdPage();
         internal readonly GpuPage GpuPage = new GpuPage();
+        internal readonly DockerProcessPage DockerProcessPage = new DockerProcessPage();
 
         private ActionBase statusBarAction = null;
         public ActionBase StatusBarAction { get { return statusBarAction; } }
@@ -151,6 +152,7 @@ namespace XenAdmin
             components.Add(AdPage);
             components.Add(GpuPage);
             components.Add(SearchPage);
+            components.Add(DockerProcessPage);
 
             AddTabContents(VMStoragePage, TabPageStorage);
             AddTabContents(SrStoragePage, TabPageSR);
@@ -170,6 +172,7 @@ namespace XenAdmin
             AddTabContents(AdPage, TabPageAD);
             AddTabContents(GpuPage, TabPageGPU);
             AddTabContents(SearchPage, TabPageSearch);
+            AddTabContents(DockerProcessPage, TabPageDockerProcess);
 
             #endregion
 
@@ -201,6 +204,7 @@ namespace XenAdmin
             FormFontFixer.Fix(this);
 
             Folders.InitFolders();
+            DockerContainers.InitDockerContainers();
             OtherConfigAndTagsWatcher.InitEventHandlers();
 
             // Fix colour of text on gradient panels
@@ -1242,12 +1246,22 @@ namespace XenAdmin
             ToolStrip.Enabled = ToolbarsEnabled;
             ShowToolbarMenuItem.Checked = toolbarToolStripMenuItem.Checked = ToolbarsEnabled;
 
+            bool containerButtonsAvailable = startContainerToolStripButton.Enabled || stopContainerToolStripButton.Enabled || 
+                resumeContainerToolStripButton.Enabled || pauseContainerToolStripButton.Enabled || restartContainerToolStripButton.Enabled;
+
+            startContainerToolStripButton.Available = containerButtonsAvailable && startContainerToolStripButton.Enabled;
+            stopContainerToolStripButton.Available = containerButtonsAvailable && (stopContainerToolStripButton.Enabled || !startContainerToolStripButton.Available);
+            resumeContainerToolStripButton.Available = containerButtonsAvailable && resumeContainerToolStripButton.Enabled;
+            pauseContainerToolStripButton.Available = containerButtonsAvailable && (pauseContainerToolStripButton.Enabled || !resumeContainerToolStripButton.Available);
+            restartContainerToolStripButton.Available = containerButtonsAvailable;
+
             powerOnHostToolStripButton.Available = powerOnHostToolStripButton.Enabled;
             startVMToolStripButton.Available = startVMToolStripButton.Enabled;
-            shutDownToolStripButton.Available = shutDownToolStripButton.Enabled || (!startVMToolStripButton.Available && !powerOnHostToolStripButton.Available);
+            shutDownToolStripButton.Available = shutDownToolStripButton.Enabled || (!startVMToolStripButton.Available && !powerOnHostToolStripButton.Available && !containerButtonsAvailable);
+            RebootToolbarButton.Available = RebootToolbarButton.Enabled || !containerButtonsAvailable;
 
             resumeToolStripButton.Available = resumeToolStripButton.Enabled;
-            SuspendToolbarButton.Available = SuspendToolbarButton.Enabled || !resumeToolStripButton.Available;
+            SuspendToolbarButton.Available = SuspendToolbarButton.Enabled || (!resumeToolStripButton.Available && !containerButtonsAvailable);
 
             ForceRebootToolbarButton.Available = ((ForceVMRebootCommand)ForceRebootToolbarButton.Command).ShowOnMainToolBar;
             ForceShutdownToolbarButton.Available = ((ForceVMShutDownCommand)ForceShutdownToolbarButton.Command).ShowOnMainToolBar;
@@ -1280,18 +1294,20 @@ namespace XenAdmin
             bool isHostLive = SelectionManager.Selection.FirstIsLiveHost;
             bool isStorageLinkSelected = SelectionManager.Selection.FirstIsStorageLink;
             bool isStorageLinkSRSelected = SelectionManager.Selection.First is StorageLinkRepository && ((StorageLinkRepository)SelectionManager.Selection.First).SR(ConnectionsManager.XenConnectionsCopy) != null;
+            bool isDockerContainerSelected = SelectionManager.Selection.First is DockerContainer;
 
             bool selectedTemplateHasProvisionXML = SelectionManager.Selection.FirstIsTemplate && ((VM)SelectionManager.Selection[0].XenObject).HasProvisionXML;
 
             NewTabCount = 0;
             ShowTab(TabPageHome, !SearchMode && show_home);
-            ShowTab(TabPageGeneral, !multi && !SearchMode && (isVMSelected || (isHostSelected && (isHostLive || !is_connected)) || isPoolSelected || isSRSelected || isStorageLinkSelected));
+            ShowTab(TabPageGeneral, !multi && !SearchMode && (isVMSelected || (isHostSelected && (isHostLive || !is_connected)) || isPoolSelected || isSRSelected || isStorageLinkSelected || isDockerContainerSelected));
             ShowTab(dmc_upsell ? TabPageBallooningUpsell : TabPageBallooning, !multi && !SearchMode && mr_or_greater && (isVMSelected || (isHostSelected && isHostLive) || isPoolSelected));
             ShowTab(TabPageStorage, !multi && !SearchMode && (isRealVMSelected || (isTemplateSelected && !selectedTemplateHasProvisionXML)));
             ShowTab(TabPageSR, !multi && !SearchMode && (isSRSelected || isStorageLinkSRSelected));
             ShowTab(TabPagePhysicalStorage, !multi && !SearchMode && ((isHostSelected && isHostLive) || isPoolSelected));
             ShowTab(TabPageNetwork, !multi && !SearchMode && (isVMSelected || (isHostSelected && isHostLive) || isPoolSelected));
             ShowTab(TabPageNICs, !multi && !SearchMode && ((isHostSelected && isHostLive)));
+            ShowTab(TabPageDockerProcess, !multi && !SearchMode && isDockerContainerSelected);
 
             bool isPoolOrLiveStandaloneHost = isPoolSelected || (isHostSelected && isHostLive && selectionPool == null);
 
@@ -1830,6 +1846,10 @@ namespace XenAdmin
                 {
                     GpuPage.XenObject = SelectionManager.Selection.FirstAsXenObject;
                 }
+                else if (t == TabPageDockerProcess)
+                {
+                    DockerProcessPage.DockerContainer = SelectionManager.Selection.First as DockerContainer;
+                }
             }
 
             if (t == TabPagePeformance)
@@ -1861,7 +1881,7 @@ namespace XenAdmin
         /// </summary>
         public enum Tab
         {
-            Overview, Home, Settings, Storage, Network, Console, Performance, NICs, SR
+            Overview, Home, Settings, Storage, Network, Console, Performance, NICs, SR, DockerProcess
         }
 
         public void SwitchToTab(Tab tab)
@@ -1894,6 +1914,9 @@ namespace XenAdmin
                     break;
                 case Tab.SR:
                     TheTabControl.SelectedTab = TabPageSR;
+                    break;
+                case Tab.DockerProcess:
+                    TheTabControl.SelectedTab = TabPageDockerProcess;
                     break;
                 default:
                     throw new NotImplementedException();
@@ -2272,6 +2295,8 @@ namespace XenAdmin
                 return "TabPageWLBUpsell";
             if (TheTabControl.SelectedTab == TabPageGPU)
                 return "TabPageGPU" + modelObj;
+            if (TheTabControl.SelectedTab == TabPageDockerProcess)
+                return "TabPageDockerProcess" + modelObj;
             return "TabPageUnknown";
         }
 

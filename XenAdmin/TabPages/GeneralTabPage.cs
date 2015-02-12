@@ -427,6 +427,11 @@ namespace XenAdmin.TabPages
                 base.Text = Messages.STORAGELINKSYSTEM_GENERAL_TAB_TITLE;
             else if (xenObject is StorageLinkRepository)
                 base.Text = Messages.SR_GENERAL_TAB_TITLE;
+            else if (xenObject is DockerContainer)
+            {
+                buttonProperties.Visible = false;
+                base.Text = Messages.CONTAINER_GENERAL_TAB_TITLE;
+            }
 
             panel2.SuspendLayout();
             // Clear all the data from the sections (visible and non visible)
@@ -440,6 +445,10 @@ namespace XenAdmin.TabPages
             if (xenObject is Host && (xenObject.Connection == null || !xenObject.Connection.IsConnected))
             {
                 generateDisconnectedHostBox();
+            }
+            else if (xenObject is DockerContainer)
+            {
+                generateDockerContainerGeneralBox();
             }
             else
             {
@@ -1340,6 +1349,23 @@ namespace XenAdmin.TabPages
             }
 
             s.AddEntry(FriendlyName("host.uuid"), GetUUID(xenObject));
+        }
+
+        private void generateDockerContainerGeneralBox()
+        {
+            if (xenObject is DockerContainer)
+            {
+                PDSection s = pdSectionGeneral;
+                DockerContainer dockerContainer = (DockerContainer)xenObject;
+                s.AddEntry(Messages.NAME, dockerContainer.Name.Length != 0 ? dockerContainer.Name : Messages.NONE);
+                s.AddEntry(Messages.STATUS, dockerContainer.status.Length != 0 ? dockerContainer.status : Messages.NONE);
+                s.AddEntry(Messages.CONTAINER_CREATED, dockerContainer.created.Length != 0 ? dockerContainer.created : Messages.NONE);
+                s.AddEntry(Messages.CONTAINER_IMAGE, dockerContainer.image.Length != 0 ? dockerContainer.image : Messages.NONE);
+                s.AddEntry(Messages.CONTAINER, dockerContainer.container.Length != 0 ? dockerContainer.container : Messages.NONE);
+                s.AddEntry(Messages.CONTAINER_COMMAND, dockerContainer.command.Length != 0 ? dockerContainer.command : Messages.NONE);
+                s.AddEntry(Messages.CONTAINER_PORTS, dockerContainer.ports.Length != 0 ? dockerContainer.ports : Messages.NONE);
+                s.AddEntry(Messages.UUID, dockerContainer.uuid.Length != 0 ? dockerContainer.uuid : Messages.NONE);
+            }
         }
 
         private void generateStorageLinkBox()

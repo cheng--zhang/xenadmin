@@ -108,6 +108,11 @@
     <Compile Include="Alerts\Types\MessageAlert.cs" />
     <Compile Include="Alerts\Types\XenServerPatchAlert.cs" />
     <Compile Include="Alerts\Types\XenServerVersionAlert.cs" />
+    <Compile Include="Commands\RestartDockerContainerCommand.cs" />
+    <Compile Include="Commands\ResumeDockerContainerCommand.cs" />
+    <Compile Include="Commands\PauseDockerContainerCommand.cs" />
+    <Compile Include="Commands\StopDockerContainerCommand.cs" />
+    <Compile Include="Commands\StartDockerContainerCommand.cs" />
     <Compile Include="Commands\Controls\EditPropertiesToolStripMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -189,6 +194,7 @@
     <Compile Include="Diagnostics\Checks\AssertCanEvacuateCheck.cs" />
     <Compile Include="Diagnostics\Checks\AssertCanEvacuateUpgradeCheck.cs" />
     <Compile Include="Diagnostics\Checks\HostHasUnsupportedStorageLinkSRCheck.cs" />
+    <Compile Include="Diagnostics\Problems\HostProblem\HostOutOfSpaceProblem.cs" />
     <Compile Include="Diagnostics\Problems\ProblemWithInformationUrl.cs" />
     <Compile Include="Diagnostics\Problems\SRProblem\UnsupportedStorageLinkSrIsPresentProblem.cs" />
     <Compile Include="Diagnostics\Problems\VMProblem\InvalidVCPUConfiguration.cs" />
@@ -230,6 +236,17 @@
     <Compile Include="Dialogs\UpsellDialog.designer.cs">
       <DependentUpon>UpsellDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsPanels\VMEnlightenmentEditPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsPanels\VMEnlightenmentEditPage.Designer.cs">
+      <DependentUpon>VMEnlightenmentEditPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsPanels\Wlb\WlbAdvancedSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -261,11 +278,6 @@
       <DependentUpon>WlbThresholdsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="Plugins\Features\ParentMenuItemFeature.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="SettingsUpdate.cs" />
     <Compile Include="TabPages\BaseTabPage.cs">
       <SubType>UserControl</SubType>
@@ -546,6 +558,12 @@
     </Compile>
     <Compile Include="Wizards\NewSRWizard_Pages\Frontends\CSLG.Designer.cs">
       <DependentUpon>CSLG.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizards\NewVMWizard\Page_CloudConfigParameters.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Wizards\NewVMWizard\Page_CloudConfigParameters.Designer.cs">
+      <DependentUpon>Page_CloudConfigParameters.cs</DependentUpon>
     </Compile>
     <Compile Include="Wizards\NewVMWizard\NewVMWizard.cs">
       <SubType>Form</SubType>
@@ -1175,6 +1193,12 @@
     <Compile Include="TabPages\NICPage.Designer.cs">
       <DependentUpon>NICPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="TabPages\DockerProcessPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TabPages\DockerProcessPage.Designer.cs">
+      <DependentUpon>DockerProcessPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="TabPages\SrStoragePage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1582,6 +1606,15 @@
       <SubType>Designer</SubType>
       <DependentUpon>HostMultipathPage.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SettingsPanels\VMEnlightenmentEditPage.ja.resx">
+      <DependentUpon>VMEnlightenmentEditPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsPanels\VMEnlightenmentEditPage.resx">
+      <DependentUpon>VMEnlightenmentEditPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsPanels\VMEnlightenmentEditPage.zh-CN.resx">
+      <DependentUpon>VMEnlightenmentEditPage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SettingsPanels\Wlb\WlbAdvancedSettingsPage.resx">
       <SubType>Designer</SubType>
       <DependentUpon>WlbAdvancedSettingsPage.cs</DependentUpon>
@@ -1653,6 +1686,16 @@
     <EmbeddedResource Include="Wizards\GenericPages\RBACWarningPage.resx">
       <SubType>Designer</SubType>
       <DependentUpon>RBACWarningPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\NewVMWizard\Page_CloudConfigParameters.ja.resx">
+      <DependentUpon>Page_CloudConfigParameters.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\NewVMWizard\Page_CloudConfigParameters.resx">
+      <DependentUpon>Page_CloudConfigParameters.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\NewVMWizard\Page_CloudConfigParameters.zh-CN.resx">
+      <DependentUpon>Page_CloudConfigParameters.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizards\NewVMWizard\NewVMWizard.resx">
       <SubType>Designer</SubType>
@@ -2046,6 +2089,10 @@
       <DependentUpon>NICPage.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="TabPages\DockerProcessPage.resx">
+      <DependentUpon>DockerProcessPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>    
     <EmbeddedResource Include="TabPages\SrStoragePage.resx">
       <DependentUpon>SrStoragePage.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -3390,12 +3437,6 @@
     <Compile Include="Wizards\NewVMWizard\LunPerVdiNewVMMappingPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Wizards\NewVMWizard\Page_Cloud.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Wizards\NewVMWizard\Page_Cloud.designer.cs">
-      <DependentUpon>Page_Cloud.cs</DependentUpon>
-    </Compile>
     <Compile Include="Wizards\ImportWizard\ImportWizard.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -3954,12 +3995,14 @@
     <None Include="Images\close_16.png" />
     <Content Include="Images\commands_16.png" />
     <Content Include="Images\console_16.png" />
+    <None Include="Images\coreos-globe-icon.png" />
     <Content Include="Images\cross.png" />
     <None Include="Images\DateTime16.png" />
     <None Include="Images\sl_connecting_16.png" />
     <None Include="Images\gripper.png" />
     <None Include="Images\sl_add_storage_system_small_16.png" />
     <None Include="Images\detach_24.png" />
+    <None Include="Images\DC_16.png" />
     <Content Include="Images\export_32.png" />
     <None Include="Images\failed_action_16.png" />
     <Content Include="Images\help_16_hover.png" />
@@ -3985,10 +4028,12 @@
     <None Include="Images\pool_up_16.png" />
     <None Include="Images\pool_up_32.png" />
     <None Include="Images\objects_16_textured.png" />
+    <None Include="Images\PausedDC_16.png" />
     <Content Include="Images\Refresh16.png" />
     <None Include="Images\saved_searches_16.png" />
     <None Include="Images\server_up_16.png" />
     <None Include="Images\saved_searches_24.png" />
+    <None Include="Images\RunningDC_16.png" />
     <Content Include="Images\sl_luns_16.png" />
     <Content Include="Images\debian_16x.png" />
     <None Include="Images\desktop.jpg" />
@@ -4053,6 +4098,7 @@
     <None Include="Images\SpinningFrame5.png" />
     <None Include="Images\SpinningFrame6.png" />
     <None Include="Images\SpinningFrame7.png" />
+    <None Include="Images\StoppedDC_16.png" />
     <Content Include="Images\subscribe.png" />
     <None Include="Images\success_action_16.png" />
     <Content Include="Images\suse_16x.png" />
@@ -5591,6 +5637,12 @@
     <EmbeddedResource Include="TabPages\NICPage.zh-CN.resx">
       <DependentUpon>NICPage.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TabPages\DockerProcessPage.ja.resx">
+      <DependentUpon>DockerProcessPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TabPages\DockerProcessPage.zh-CN.resx">
+      <DependentUpon>DockerProcessPage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TabPages\PerformancePage.ja.resx">
       <DependentUpon>PerformancePage.cs</DependentUpon>
     </EmbeddedResource>
@@ -6211,15 +6263,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Wizards\NewVMWizard\NewVMWizard.zh-CN.resx">
       <DependentUpon>NewVMWizard.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Wizards\NewVMWizard\Page_Cloud.ja.resx">
-      <DependentUpon>Page_Cloud.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Wizards\NewVMWizard\Page_Cloud.resx">
-      <DependentUpon>Page_Cloud.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Wizards\NewVMWizard\Page_Cloud.zh-CN.resx">
-      <DependentUpon>Page_Cloud.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizards\NewVMWizard\Page_CopyBiosStrings.ja.resx">
       <DependentUpon>Page_CopyBiosStrings.cs</DependentUpon>

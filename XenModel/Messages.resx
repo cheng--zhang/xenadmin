@@ -213,6 +213,21 @@
   <data name="ACTION_CHANGING_SHADOW_MULTIPLIER_FOR" xml:space="preserve">
     <value>Changing shadow multiplier for '{0}'...</value>
   </data>
+  <data name="ACTION_CHECK_DISK_SPACE_DESCRIPTION" xml:space="preserve">
+    <value>Checking disk space on {0}</value>
+  </data>
+  <data name="ACTION_CHECK_DISK_SPACE_TITLE" xml:space="preserve">
+    <value>Check disk space</value>
+  </data>
+  <data name="ACTION_CLEANUP_DISK_SPACE_DESCRIPTION" xml:space="preserve">
+    <value>Cleaning up disk space on {0}</value>
+  </data>
+  <data name="ACTION_CLEANUP_DISK_SPACE_SUCCESS" xml:space="preserve">
+    <value>Successfully cleaned up disk space on {0}</value>
+  </data>
+  <data name="ACTION_CLEANUP_DISK_SPACE_TITLE" xml:space="preserve">
+    <value>Clean up disk space</value>
+  </data>
   <data name="ACTION_CREATE_BOND_DESCRIPTION" xml:space="preserve">
     <value>Creating {0} ...</value>
   </data>
@@ -248,6 +263,12 @@
   </data>
   <data name="ACTION_DETATCHING_MULTIPLE_VDIS_TITLE" xml:space="preserve">
     <value>Detaching Multiple Storage Items</value>
+  </data>
+  <data name="ACTION_DISABLE_VM_ENLIGHTENMENT_DESCRIPTION" xml:space="preserve">
+    <value>Disabling </value>
+  </data>
+  <data name="ACTION_DISABLE_VM_ENLIGHTENMENT_TITLE" xml:space="preserve">
+    <value>Disable container enlightenment on VM '{0}'</value>
   </data>
   <data name="ACTION_DISK_ACTIVATED" xml:space="preserve">
     <value>Activated disk...</value>
@@ -345,6 +366,12 @@
   <data name="ACTION_DR_TASK_DESTROY_TITLE" xml:space="preserve">
     <value>DR cleanup ({0})</value>
   </data>
+  <data name="ACTION_ENABLE_VM_ENLIGHTENMENT_DESCRIPTION" xml:space="preserve">
+    <value>Enabling</value>
+  </data>
+  <data name="ACTION_ENABLE_VM_ENLIGHTENMENT_TITLE" xml:space="preserve">
+    <value>Enable container enlightenment on VM '{0}'</value>
+  </data>
   <data name="ACTION_EXPORT_DESCRIPTION_BLOCK_CHECKSUM_FAILED" xml:space="preserve">
     <value>Export failed due to a block checksum mismatch.  Please retry the export.</value>
   </data>
@@ -398,6 +425,12 @@
   </data>
   <data name="ACTION_GET_DATASOURCES" xml:space="preserve">
     <value>Fetch data sources</value>
+  </data>
+  <data name="ACTION_GET_DISK_SPACE_REQUIREMENTS_DESCRIPTION" xml:space="preserve">
+    <value>Getting space requirements on {0}</value>
+  </data>
+  <data name="ACTION_GET_DISK_SPACE_REQUIREMENTS_TITLE" xml:space="preserve">
+    <value>Get space requirements</value>
   </data>
   <data name="ACTION_GET_METADATA_VDIS_DONE" xml:space="preserve">
     <value>Action completed. {0} VDIs found.</value>
@@ -486,6 +519,15 @@
   <data name="ACTION_MULTIPLE_DR_TASK_CREATE_TITLE" xml:space="preserve">
     <value>Prepare Storage Repositories</value>
   </data>
+  <data name="ACTION_PAUSE_CONTAINER_DESCRIPTION" xml:space="preserve">
+    <value>Pausing</value>
+  </data>
+  <data name="ACTION_PAUSE_CONTAINER_END_DESCRIPTION" xml:space="preserve">
+    <value>Paused</value>
+  </data>
+  <data name="ACTION_PAUSE_CONTAINER_TITLE" xml:space="preserve">
+    <value>Pausing Docker Container '{0}'</value>
+  </data>
   <data name="ACTION_PIF_SCAN_START_DESC" xml:space="preserve">
     <value>Scanning...</value>
   </data>
@@ -542,6 +584,15 @@
   </data>
   <data name="ACTION_RESUMEANDSTARTVMS_STARTINGN" xml:space="preserve">
     <value>Starting VM {0} of {1}</value>
+  </data>
+  <data name="ACTION_RESUME_CONTAINER_DESCRIPTION" xml:space="preserve">
+    <value>Resuming</value>
+  </data>
+  <data name="ACTION_RESUME_CONTAINER_END_DESCRIPTION" xml:space="preserve">
+    <value>Resumed</value>
+  </data>
+  <data name="ACTION_RESUME_CONTAINER_TITLE" xml:space="preserve">
+    <value>Resuming Docker Container '{0}'</value>
   </data>
   <data name="ACTION_SAVE_ALERTS" xml:space="preserve">
     <value>Save alerts</value>
@@ -714,6 +765,15 @@
   <data name="ACTION_SR_UPGRADING" xml:space="preserve">
     <value>Upgrading SR</value>
   </data>
+  <data name="ACTION_START_CONTAINER_DESCRIPTION" xml:space="preserve">
+    <value>Starting</value>
+  </data>
+  <data name="ACTION_START_CONTAINER_END_DESCRIPTION" xml:space="preserve">
+    <value>Started</value>
+  </data>
+  <data name="ACTION_START_CONTAINER_TITLE" xml:space="preserve">
+    <value>Starting Docker Container '{0}'</value>
+  </data>
   <data name="ACTION_START_VMS_AND_APPLIANCES_NONE_SELECTED" xml:space="preserve">
     <value>There are no VMs or vApps to start</value>
   </data>
@@ -731,6 +791,15 @@
   </data>
   <data name="ACTION_STATUS_SUCCEEDED" xml:space="preserve">
     <value>Succeeded</value>
+  </data>
+  <data name="ACTION_STOP_CONTAINER_DESCRIPTION" xml:space="preserve">
+    <value>Stopping</value>
+  </data>
+  <data name="ACTION_STOP_CONTAINER_END_DESCRIPTION" xml:space="preserve">
+    <value>Stopped</value>
+  </data>
+  <data name="ACTION_STOP_CONTAINER_TITLE" xml:space="preserve">
+    <value>Stopping Docker Container '{0}'</value>
   </data>
   <data name="ACTION_SYSTEM_STATUS_CANCELLED" xml:space="preserve">
     <value>Getting system status canceled</value>
@@ -2750,6 +2819,24 @@ You can only connect to a single Citrix XenServer Express Edition server at a ti
   <data name="CONTAINED_IN" xml:space="preserve">
     <value>contained in</value>
   </data>
+  <data name="CONTAINER" xml:space="preserve">
+    <value>Container</value>
+  </data>
+  <data name="CONTAINER_COMMAND" xml:space="preserve">
+    <value>Command</value>
+  </data>
+  <data name="CONTAINER_CREATED" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="CONTAINER_GENERAL_TAB_TITLE" xml:space="preserve">
+    <value>Container General Properties</value>
+  </data>
+  <data name="CONTAINER_PORTS" xml:space="preserve">
+    <value>Ports</value>
+  </data>
+  <data name="CONTAINER_IMAGE" xml:space="preserve">
+    <value>Image</value>
+  </data>
   <data name="CONTAINS" xml:space="preserve">
     <value>contains</value>
   </data>
@@ -3627,6 +3714,9 @@ This will also delete its subfolders.</value>
   </data>
   <data name="DOES_NOT_USE" xml:space="preserve">
     <value>does not use</value>
+  </data>
+  <data name="DOCKER_PROCESS_TAB_TITLE" xml:space="preserve">
+    <value>Docker Processes</value>
   </data>
   <data name="DONE" xml:space="preserve">
     <value>done.</value>
@@ -6153,6 +6243,15 @@ Size: {3}</value>
   <data name="LABEL_SYNC" xml:space="preserve">
     <value>Synchronizing with {0}...</value>
   </data>
+  <data name="LAST_REFRESH_FAIL" xml:space="preserve">
+    <value>The information is not available.</value>
+  </data>
+  <data name="LAST_REFRESH_IN_PROGRESS" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="LAST_REFRESH_SUCCESS" xml:space="preserve">
+    <value>Last refresh: {0}</value>
+  </data>
   <data name="LAST_WEEK" xml:space="preserve">
     <value>was last week</value>
   </data>
@@ -6618,6 +6717,9 @@ This will permanently delete and reinitialize all local storage on the servers. 
   <data name="MAINWINDOW_NEW_VM_FROM_TEMPLATE" xml:space="preserve">
     <value>&amp;New VM wizard...</value>
   </data>
+  <data name="MAINWINDOW_PAUSE" xml:space="preserve">
+    <value>&amp;Pause</value>
+  </data>
   <data name="MAINWINDOW_POWER_ON" xml:space="preserve">
     <value>Power O&amp;n</value>
   </data>
@@ -6698,6 +6800,9 @@ This will permanently delete and reinitialize all local storage on the servers. 
   </data>
   <data name="MAINWINDOW_START_ON_HOST" xml:space="preserve">
     <value>Start on Ser&amp;ver</value>
+  </data>
+  <data name="MAINWINDOW_STOP" xml:space="preserve">
+    <value>S&amp;top</value>
   </data>
   <data name="MAINWINDOW_SUSPEND" xml:space="preserve">
     <value>S&amp;uspend</value>
@@ -6796,7 +6901,7 @@ This will permanently delete and reinitialize all local storage on the servers. 
     <value>&amp;Memory:</value>
   </data>
   <data name="MEMORY_XEN" xml:space="preserve">
-    <value>Xen</value>
+    <value>XenServer</value>
   </data>
   <data name="MEM_NOT_WHEN_SUSPENDED" xml:space="preserve">
     <value>The memory cannot be changed when the VM is suspended</value>
@@ -7650,6 +7755,12 @@ When you configure an NFS storage repository, you simply provide the hostname or
   <data name="NEWVMWIZARD_CDMEDIAPAGE_TITLE" xml:space="preserve">
     <value>Locate the operating system installation media</value>
   </data>
+  <data name="NEWVMWIZARD_CLOUD_CONFIG_PARAMETERS_PAGE" xml:space="preserve">
+    <value>Cloud-Config Parameters</value>
+  </data>
+  <data name="NEWVMWIZARD_CLOUD_CONFIG_PARAMETERS_PAGE_TITLE" xml:space="preserve">
+    <value>Configure Cloud-Config Parameters</value>
+  </data>
   <data name="NEWVMWIZARD_COPY_BIOS_STRINGS_PAGE_HOST" xml:space="preserve">
     <value>Copy BIOS Strings from</value>
   </data>
@@ -7819,6 +7930,9 @@ Review these settings, then click Previous if you need to change anything. Other
   </data>
   <data name="NEWVMWIZARD_TEMPLATEPAGE_CITRIX" xml:space="preserve">
     <value>Citrix</value>
+  </data>
+  <data name="NEWVMWIZARD_TEMPLATEPAGE_COREOS" xml:space="preserve">
+    <value>CoreOS</value>
   </data>
   <data name="NEWVMWIZARD_TEMPLATEPAGE_CUSTOM" xml:space="preserve">
     <value>Custom</value>
@@ -8128,6 +8242,27 @@ It is strongly recommended that you Cancel and apply the latest version of the p
   <data name="NOT_CONTAINS" xml:space="preserve">
     <value>does not contain</value>
   </data>
+  <data name="NOT_ENOUGH_SPACE_DESCRIPTION" xml:space="preserve">
+    <value>This host does not have enough disk space to install this update</value>
+  </data>
+  <data name="NOT_ENOUGH_SPACE_MESSAGE_AVAILABLE_SPACE" xml:space="preserve">
+    <value>Space available: {0}</value>
+  </data>
+  <data name="NOT_ENOUGH_SPACE_MESSAGE_CLEANUP" xml:space="preserve">
+    <value>XenCenter can free up {0} by removing residual update files. Do you wish to proceed with the cleanup?</value>
+  </data>
+  <data name="NOT_ENOUGH_SPACE_MESSAGE_INSTALL" xml:space="preserve">
+    <value>There is not enough space on '{0}' to install update '{1}'.</value>
+  </data>
+  <data name="NOT_ENOUGH_SPACE_MESSAGE_NOCLEANUP" xml:space="preserve">
+    <value>You need to manually free up more space and try again.</value>
+  </data>
+  <data name="NOT_ENOUGH_SPACE_MESSAGE_REQUIRED_SPACE" xml:space="preserve">
+    <value>Space required: {0}</value>
+  </data>
+  <data name="NOT_ENOUGH_SPACE_MESSAGE_UPLOAD" xml:space="preserve">
+    <value>There is not enough space on '{0}' to upload update '{1}'.</value>
+  </data>
   <data name="NOT_IN_A_FOLDER" xml:space="preserve">
     <value>Not in any folder</value>
   </data>
@@ -8348,6 +8483,9 @@ It is strongly recommended that you Cancel and apply the latest version of the p
   <data name="PASTE" xml:space="preserve">
     <value>Paste</value>
   </data>
+  <data name="PATCHINGWIZARD_CLEANUP" xml:space="preserve">
+    <value>&amp;Clean up...</value>
+  </data>
   <data name="PATCHINGWIZARD_MODEPAGE_NOACTION" xml:space="preserve">
     <value>No action required</value>
   </data>
@@ -8368,6 +8506,9 @@ It is strongly recommended that you Cancel and apply the latest version of the p
   </data>
   <data name="PATCHINGWIZARD_MODEPAGE_UNKNOWNACTION" xml:space="preserve">
     <value>Unknown</value>
+  </data>
+  <data name="PATCHINGWIZARD_MORE_INFO" xml:space="preserve">
+    <value>&amp;More info...</value>
   </data>
   <data name="PATCHINGWIZARD_PATCHINGPAGE_POOL_RESOLVE" xml:space="preserve">
     <value>Resolve pool problems</value>
@@ -8502,6 +8643,10 @@ It is strongly recommended that you Cancel and apply the latest version of the p
   </data>
   <data name="PATCH_APPLIED" xml:space="preserve">
     <value>Update '{0}' Applied to Server '{1}'</value>
+  </data>
+  <data name="PATCH_DESCRIPTION_AND_INSTALLATION_SIZE" xml:space="preserve">
+    <value>{0} 
+Installation size: {1}</value>
   </data>
   <data name="PATCH_EXPANDED_DESCRIPTION" xml:space="preserve">
     <value>{0} 
@@ -11018,7 +11163,7 @@ Do you want to continue?</value>
     <value>Uploading to server '{0}'...</value>
   </data>
   <data name="UPLOAD_PATCH_ALREADY_UPLOADED" xml:space="preserve">
-    <value>Already uploaded to selected server(s)</value>
+    <value>Already uploaded</value>
   </data>
   <data name="UPLOAD_PATCH_DESCRIPTION" xml:space="preserve">
     <value>Uploading...</value>
@@ -11288,7 +11433,7 @@ To learn more about the XenServer Dynamic Workload Balancing feature or to start
     <value>Tools out of date (version {0} installed)</value>
   </data>
   <data name="VIRTUALIZATION_UNKNOWN" xml:space="preserve">
-    <value>Unknown</value>
+    <value>Unknown (please wait)</value>
   </data>
   <data name="VIRTUAL_DISK" xml:space="preserve">
     <value>Virtual Disk</value>
@@ -11370,6 +11515,9 @@ To learn more about the XenServer Dynamic Workload Balancing feature or to start
   </data>
   <data name="VM_APPLIANCE_SUMMARY" xml:space="preserve">
     <value>vApp name:\r\n    {0}\r\n\r\nSelected VMs:\r\n    {1}</value>
+  </data>
+  <data name="VM_ENLIGHTENMENT" xml:space="preserve">
+    <value>Container Enlightenment</value>
   </data>
   <data name="VM_GENERAL_TAB_TITLE" xml:space="preserve">
     <value>VM General Properties</value>
@@ -12351,5 +12499,17 @@ You will need to navigate to the Console on each of the selected VMs to complete
   </data>
   <data name="YOU_ARE_HERE" xml:space="preserve">
     <value>You are here</value>
+  </data>
+  <data name="ACTION_RESTART_CONTAINER_DESCRIPTION" xml:space="preserve">
+    <value>Restarting</value>
+  </data>
+  <data name="ACTION_RESTART_CONTAINER_END_DESCRIPTION" xml:space="preserve">
+    <value>Restarted</value>
+  </data>
+  <data name="ACTION_RESTART_CONTAINER_TITLE" xml:space="preserve">
+    <value>Restarting Docker Container '{0}'</value>
+  </data>
+  <data name="MAINWINDOW_RESTART" xml:space="preserve">
+    <value>Re&amp;start</value>
   </data>
 </root>

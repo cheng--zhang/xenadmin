@@ -81,5 +81,8 @@ namespace XenAdmin.Network
         VM_appliance[] VM_appliances { get; }
         VM[] VMs { get; }
         IEnumerable<IXenObject> XenSearchableObjects { get; }
+        DockerContainer[] DockerContainers { get; }
+        void UpdateDockerContainersForVM(IEnumerable<DockerContainer> d, VM v);
+        void CheckDockerContainersBatchChange();
     }
 }
