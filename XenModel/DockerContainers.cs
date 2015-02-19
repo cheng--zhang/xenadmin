@@ -232,17 +232,17 @@ namespace XenAdmin.Model
                     if (propertyNode != null)
                         ports = propertyNode.InnerText;
 
-                    DockerContainer dockerContainer = new DockerContainer(vm, id, name, string.Empty, status, container, created, image, command, ports);
+                    DockerContainer newContainer = new DockerContainer(vm, id, name, string.Empty, status, container, created, image, command, ports);
                     
                     // update existing container or add a new one
-                    DockerContainer existingContainer = vm.Connection.Resolve(new XenRef<DockerContainer>(id));
+                    DockerContainer existingContainer = vm.Connection.Resolve(new XenRef<DockerContainer>(newContainer));
                     if (existingContainer != null)
                     {
-                        existingContainer.UpdateFrom(dockerContainer);
+                        existingContainer.UpdateFrom(newContainer);
                         containers.Add(existingContainer);
                     }
                     else
-                        containers.Add(dockerContainer);
+                        containers.Add(newContainer);
                 }
             }
             return containers;
@@ -251,7 +251,7 @@ namespace XenAdmin.Model
         public static ComparableList<DockerContainer> GetDockerVMs(IXenObject o)
         {
             var vm = o as VM;
-            if (vm != null)
+            if (vm != null && vm.is_a_real_vm)
             {
                 return new ComparableList<DockerContainer>(DockerContainers.GetContainersFromOtherConfig(vm));
             }
