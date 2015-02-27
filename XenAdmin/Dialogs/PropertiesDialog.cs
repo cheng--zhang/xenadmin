@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using XenAdmin.Wizards.NewVMWizard;
 using XenAPI;
 using XenAdmin.Actions;
 using XenAdmin.SettingsPanels;
@@ -78,6 +79,7 @@ namespace XenAdmin.Dialogs
         private GpuEditPage GpuEditPage;
         private PoolGpuEditPage PoolGpuEditPage;
         private VMEnlightenmentEditPage VMEnlightenmentEditPage;
+        private Page_CloudConfigParameters CloudConfigParametersPage;
         #endregion
 
         private IXenObject xenObject, xenObjectBefore, xenObjectCopy;
@@ -206,10 +208,10 @@ namespace XenAdmin.Dialogs
                 if (is_pool && Helpers.MidnightRideOrGreater(xenObject.Connection))
                     ShowTab(PoolPowerONEditPage = new PoolPowerONEditPage());
 
-                if (is_pool_or_standalone)
+                if ((is_pool_or_standalone && Helpers.VGpuCapability(xenObjectCopy.Connection))
+                    || (is_host && ((Host)xenObjectCopy).CanEnableDisableIntegratedGpu))
                 {
-                    if (Helpers.VGpuCapability(xenObjectCopy.Connection)) 
-                        ShowTab(PoolGpuEditPage = new PoolGpuEditPage());
+                    ShowTab(PoolGpuEditPage = new PoolGpuEditPage());
                 }
 
                 if (is_network)
@@ -240,8 +242,11 @@ namespace XenAdmin.Dialogs
                     ShowTab(VMAdvancedEditPage = new VMAdvancedEditPage());
                 }
 
-                if (is_vm && Helpers.CreamOrGreater(xenObject.Connection) && ((VM)xenObjectCopy).CanBeEnlightened)
+                if (is_vm && Helpers.ContainerCapability(xenObject.Connection) && ((VM)xenObjectCopy).CanBeEnlightened)
                     ShowTab(VMEnlightenmentEditPage = new VMEnlightenmentEditPage());
+
+                if (is_vm && Helpers.ContainerCapability(xenObject.Connection) && ((VM)xenObjectCopy).CanHaveCloudConfigDrive)
+                    ShowTab(CloudConfigParametersPage = new Page_CloudConfigParameters());
 
                 if (is_VMPP)
                 {
