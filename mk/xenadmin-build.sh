@@ -34,8 +34,8 @@ set -eu
 
 source "$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/declarations.sh"
 
-WGET_OPT="-q -N --no-check-certificate --secure-protocol=SSLv2"
-WGET_VERBOSE_OPT="-N --no-check-certificate --secure-protocol=SSLv2"
+WGET_OPT="-q -N --no-check-certificate"
+WGET_VERBOSE_OPT="-N --no-check-certificate"
 WGET_OPT="-q ${WGET_VERBOSE_OPT}"
 
 UNZIP="unzip -q -o"
