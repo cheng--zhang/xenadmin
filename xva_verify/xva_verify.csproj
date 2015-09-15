@@ -31,6 +31,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,6 +41,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -72,6 +74,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent Condition=" '$(Configuration)' == 'Release' ">"C:\Program Files\Microsoft SDKs\Windows\v6.0A\bin\mt.exe" -manifest "$(ProjectDir)$(ProjectName).manifest" -outputresource:"$(TargetDir)..\..\bin\Release\$(TargetFileName)";#1</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(Configuration)' == 'Release' ">mt.exe -nologo -manifest "$(ProjectDir)$(ProjectName).manifest" -outputresource:"$(TargetDir)..\..\bin\Release\$(TargetFileName)";#1</PostBuildEvent>
   </PropertyGroup>
 </Project>

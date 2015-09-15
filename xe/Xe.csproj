@@ -11,7 +11,7 @@
     <RootNamespace>ThinCLI</RootNamespace>
     <AssemblyName>xe</AssemblyName>
     <ApplicationIcon>AppIcon.ico</ApplicationIcon>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
     <ManifestCertificateThumbprint>4C1DD393E361B8BBCFA1E1D09539C446F88C0A11</ManifestCertificateThumbprint>
     <ManifestTimestampUrl>http://timestamp.verisign.com/scripts/timestamp.dll</ManifestTimestampUrl>
     <FileUpgradeFlags>
@@ -35,6 +35,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -43,6 +44,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -74,6 +76,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent Condition=" '$(Configuration)' == 'Release' ">"C:\Program Files\Microsoft SDKs\Windows\v6.0A\bin\mt.exe" -manifest "$(ProjectDir)$(ProjectName).manifest" -outputresource:"$(TargetDir)..\..\bin\Release\$(TargetFileName)";#1</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(Configuration)' == 'Release' ">"mt.exe" -nologo -manifest "$(ProjectDir)$(ProjectName).manifest" -outputresource:"$(TargetDir)..\..\bin\Release\$(TargetFileName)";#1</PostBuildEvent>
   </PropertyGroup>
 </Project>
