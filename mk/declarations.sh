@@ -34,13 +34,13 @@
 #Set and uncomment this to override the 3rd value of the product number 
 #normally fetched from branding
 #
-PRODUCT_MICRO_VERSION_OVERRIDE=2
+PRODUCT_MICRO_VERSION_OVERRIDE=3
 
 #this is the XenServer branch we're building; change this when making a new branch
 
 if [ -n "${DEBUG+xxx}" ]; 
 then 
-	set -x
+  set -x
 fi
 
 # that's the code to get the branch name of the repository
@@ -58,25 +58,25 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 if [ -z "${JOB_NAME+xxx}" ]
 then 
     JOB_NAME="devbuild"
-    echo "Warning: JOB_NAME env var not set, we will use ${JOB_NAME}"
+    echo "WARN:	JOB_NAME env var not set, we will use ${JOB_NAME}"
 fi
 
 if [ -z "${BUILD_NUMBER+xxx}" ]
 then 
     BUILD_NUMBER="0"
-    echo "Warning: BUILD_NUMBER env var not set, we will use ${BUILD_NUMBER}"
+    echo "WARN:	BUILD_NUMBER env var not set, we will use ${BUILD_NUMBER}"
 fi
 
 if [ -z "${BUILD_ID+xxx}" ]
 then 
     BUILD_ID=$(date +"%Y-%m-%d_%H-%M-%S")
-    echo "Warning: BUILD_ID env var not set, we will use ${BUILD_ID}"
+    echo "WARN:	BUILD_ID env var not set, we will use ${BUILD_ID}"
 fi
 
 if [ -z "${BUILD_URL+xxx}" ]
 then 
     BUILD_URL="n/a"
-    echo "Warning: BUILD_URL env var not set, we will use 'n/a'"
+    echo "WARN:	BUILD_URL env var not set, we will use 'n/a'"
 fi
 
 if [ -d "$DIR/../.git" ]
@@ -84,17 +84,22 @@ then
     if [ -z "${GIT_COMMIT-}" ]
     then
         get_REVISION="none"
-	    echo "Warning: GIT_COMMIT env var not set, we will use 'none'"
+	    echo "WARN:	GIT_COMMIT env var not set, we will use 'none'"
     else
    	    get_REVISION="${GIT_COMMIT}"
     fi
 
 	XS_BRANCH=`cd $DIR;git config --get remote.origin.url|sed -e 's@.*carbon/\(.*\)/xenadmin.git.*@\1@'`
+	if [[ $XS_BRANCH == *"/"* ]]
+        then
+            XS_BRANCH="trunk"
+            echo "WARN:	Failed to detect XS_BRANCH we will fallback to ${XS_BRANCH}"
+        fi
 else
 	if [ -z "${MERCURIAL_REVISION+xxx}" ]
 	then 
 	    MERCURIAL_REVISION="none"
-	    echo "Warning: MERCURIAL_REVISION env var not set, we will use $MERCURIAL_REVISION"
+	    echo "WARN:	MERCURIAL_REVISION env var not set, we will use $MERCURIAL_REVISION"
 	fi
 	get_REVISION=${MERCURIAL_REVISION}
 	XS_BRANCH=`cd $DIR;hg showconfig paths.default|sed -e 's@.*carbon/\(.*\)/xenadmin.hg.*@\1@'`
@@ -102,10 +107,10 @@ fi
 
 if [ -z "${XS_BRANCH+xxx}" ]
 then
-    echo Failed to detect the branch, stopping here because this would break things much later.
+    echo "ERROR:	Failed to detect the branch, stopping here because this would break things much later."
     exit 1
 else
-    echo Running on branch: $XS_BRANCH
+    echo "INFO:	Running on branch: $XS_BRANCH"
 fi
 
 #rename Jenkins environment variables to distinguish them from ours; remember to use them as get only
@@ -118,8 +123,8 @@ get_BUILD_URL=${BUILD_URL}
 if [ -z "${WORKSPACE+xxx}" ]
 then 
     DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
-    WORKSPACE=${DIR}
-    echo "Warning: WORKSPACE env var not set, we will use ${WORKSPACE}"
+    WORKSPACE="${DIR}"
+    echo "WARN:	WORKSPACE env var not set, we will use ${WORKSPACE}"
 fi
 
 if which cygpath >/dev/null; then
@@ -128,16 +133,17 @@ else
     ROOT=${WORKSPACE}
 fi
 
-echo "Workspace located in: $ROOT"
+echo "INFO:	Workspace located in: $ROOT"
 REPO=${XENADMIN_DIR}
 REF_REPO=${ROOT}/xenadmin-ref.hg
 SCRATCH_DIR=${ROOT}/scratch
 OUTPUT_DIR=${ROOT}/output
-TEST_DIR=/cygdrive/c/cygwin/tmp
+TEST_DIR=${ROOT}/tmp
+mkdir -p ${TEST_DIR}
 BUILD_ARCHIVE=${ROOT}/../builds/${get_BUILD_ID}/archive
-SECURE_BUILD_ARCHIVE_UNC=//10.80.13.10/distfiles/distfiles/WindowsBuilds
-#XENCENTER_LOGDIR="/cygdrive/c/Users/Administrator/AppData/Roaming/Citrix/XenCenter/logs"
-XENCENTER_LOGDIR="/cygdrive/c/Citrix/XenCenter/logs"
+SECURE_BUILD_ARCHIVE_UNC=//10.80.13.10/distfiles/distfiles/windowsbuilds/WindowsBuilds/$get_JOB_NAME/$BUILD_NUMBER/
+XENCENTER_LOGDIR="${ROOT}/log"
+mkdir -p ${XENCENTER_LOGDIR}
 
 # WEB_LIB is where the libraries stored in /usr/groups/linux/distfiles are exposed
 #WEB_LATEST_BUILD is where the current build will retrieve some of its dependendencies,
@@ -154,15 +160,8 @@ fi
 WEB_XE_PHASE_1=${WEB_LATEST_BUILD}/xe-phase-1
 WEB_XE_PHASE_2=${WEB_LATEST_BUILD}/xe-phase-2
 
-# This is where the build will find stuff from the latest
-# dotnet-packages build. Taking the latest build will mean that
-# rebuilding old versions of xenadmin will break in surprising ways,
-# because they will originally have been build with the latest version
-# at the time. This is not the time to persuade the GUI group to
-# change their ways, but I include this note as a public service for
-# when it all breaks. --Peter, 2014-12-16.
-DOTNET_BASE=${SECURE_BUILD_ARCHIVE_UNC}/carbon_creedence_dotnet-packages
-DOTNET_LOC=$DOTNET_BASE/$(ls $DOTNET_BASE | /usr/bin/sort -n | tail -n 1)
+#this is where the build will find stuff from the latest dotnet-packages build
+WEB_DOTNET="http://tocco.do.citrite.net:8080/job/carbon_${XS_BRANCH}_dotnet-packages/lastSuccessfulBuild/artifact"
 
 # used to copy results out of the secure build enclave
 BUILD_TOOLS_REPO=git://admin/git/closed/windows/buildtools.git
@@ -170,5 +169,5 @@ BUILD_TOOLS=${SCRATCH_DIR}/buildtools.git
 STORE_FILES=${BUILD_TOOLS}/scripts/storefiles.py
 
 #check there are xenserver builds on this branch before proceeding
-wget -N -q --spider ${WEB_XE_PHASE_1}/globals || { echo 'FATAL: Unable to locate globals, xenadmin cannot be built if there is no succesfull build of xenserver published for the same branch.' ; exit 1; }
+wget -T 10 -N -q --spider ${WEB_XE_PHASE_1}/globals || { echo 'FATAL: Unable to locate globals, xenadmin cannot be built if there is no succesfull build of xenserver published for the same branch.' ; exit 1; }
 

@@ -37,10 +37,24 @@
 # way that it will continue to work even if it's executed manually by a developer
 # or from a build automation system.
 
-DEBUG=1
-if [ -n "${DEBUG+xxx}" ];
+
+FATAL=""
+for DEP in nunit-console.exe zip unzip mkisofs wget curl hg git patch mt.exe signtool.exe candle.exe light.exe
+do
+  which $DEP >/dev/null 2>&1
+  if [ $? -ne 0 ]; then
+    FATAL="$DEP $FATAL"
+  fi
+done
+if [ -n "${FATAL}" ]; then
+  echo "FATAL: One or more build tools were not found in PATH: $FATAL"
+  exit 1
+fi
+
+
+if [ -v DEBUG ];
 then
-  echo "DEBUG mode activated (verbose)"
+  echo "INFO:	DEBUG mode activated (verbose)"
   set -x
 fi
 
@@ -97,7 +111,7 @@ private_jenkins_build()
 if [ -z "${PRIVATE_BUILD_MODE+xxx}" ]; then
     production_jenkins_build
 else
-    echo "Running private Jenkins build"
+    echo "INFO:	Running private Jenkins build"
     private_jenkins_build
 fi
 unset PRIVATE_BUILD_MODE

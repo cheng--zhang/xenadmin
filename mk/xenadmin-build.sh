@@ -34,10 +34,7 @@ set -eu
 
 source "$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/declarations.sh"
 
-WGET_OPT="-q -N --no-check-certificate"
-WGET_VERBOSE_OPT="-N --no-check-certificate"
-WGET_OPT="-q ${WGET_VERBOSE_OPT}"
-
+WGET_OPT="-q -N --timestamp"
 UNZIP="unzip -q -o"
 
 mkdir_clean()
@@ -62,7 +59,7 @@ fi
 CSET_NUMBER=$(cd ${REPO} && git rev-list HEAD -1 && echo "")
 
 #bring in version and branding info from latest xe-phase-1
-wget ${WGET_OPT} ${WEB_XE_PHASE_1}/globals -P ${SCRATCH_DIR}
+wget ${WGET_OPT} -P "${SCRATCH_DIR}" "${WEB_XE_PHASE_1}/globals"
 BRAND_CONSOLE=$(cat ${SCRATCH_DIR}/globals | grep -w BRAND_CONSOLE | sed -e 's/BRAND_CONSOLE=//g' -e 's/"//g')
 COMPANY_NAME_LEGAL=$(cat ${SCRATCH_DIR}/globals | grep -w COMPANY_NAME_LEGAL | sed -e 's/COMPANY_NAME_LEGAL=//g' -e 's/"//g')
 COMPANY_NAME_SHORT=$(cat ${SCRATCH_DIR}/globals | grep -w COMPANY_NAME_SHORT | sed -e 's/COMPANY_NAME_SHORT=//g' -e 's/"//g')
@@ -96,37 +93,31 @@ SHARPZIPLIB_DIR=${REPO}/sharpziplib/bin
 DISCUTILS_DIR=${REPO}/DiscUtils/src/bin/Release
 MICROSOFT_DOTNET_FRAMEWORK_INSTALLER_DIR=${REPO}/dotNetFx40_Full_setup
 
-cp ${DOTNET_LOC}/manifest ${SCRATCH_DIR}/dotnet-packages-manifest
-mkdir_clean ${XMLRPC_DIR} && cp ${DOTNET_LOC}/CookComputing.XmlRpcV2.dll ${XMLRPC_DIR}
-mkdir_clean ${LOG4NET_DIR} && cp ${DOTNET_LOC}/log4net.dll ${LOG4NET_DIR}
-mkdir_clean ${SHARPZIPLIB_DIR} && cp ${DOTNET_LOC}/ICSharpCode.SharpZipLib.dll ${SHARPZIPLIB_DIR}
-mkdir_clean ${DOTNETZIP_DIR} && cp ${DOTNET_LOC}/Ionic.Zip.dll ${DOTNETZIP_DIR}
-mkdir_clean ${DISCUTILS_DIR} && cp ${DOTNET_LOC}/DiscUtils.dll ${DISCUTILS_DIR}
-mkdir_clean ${MICROSOFT_DOTNET_FRAMEWORK_INSTALLER_DIR} && cp ${DOTNET_LOC}/dotNetFx40_Full_setup.exe ${MICROSOFT_DOTNET_FRAMEWORK_INSTALLER_DIR}
+wget ${WGET_OPT} -O "${SCRATCH_DIR}/dotnet-packages-manifest" "${WEB_DOTNET}/manifest"
+mkdir_clean ${XMLRPC_DIR} && wget ${WGET_OPT} -P ${XMLRPC_DIR}  ${WEB_DOTNET}/CookComputing.XmlRpcV2.dll
+mkdir_clean ${LOG4NET_DIR} && wget ${WGET_OPT} -P ${LOG4NET_DIR} ${WEB_DOTNET}/log4net.dll
+mkdir_clean ${SHARPZIPLIB_DIR} && wget ${WGET_OPT} -P ${SHARPZIPLIB_DIR} ${WEB_DOTNET}/ICSharpCode.SharpZipLib.dll
+mkdir_clean ${DOTNETZIP_DIR} && wget ${WGET_OPT} -P ${DOTNETZIP_DIR} ${WEB_DOTNET}/Ionic.Zip.dll
+mkdir_clean ${DISCUTILS_DIR} && wget ${WGET_OPT} -P ${DISCUTILS_DIR} ${WEB_DOTNET}/DiscUtils.dll
+mkdir_clean ${MICROSOFT_DOTNET_FRAMEWORK_INSTALLER_DIR} && wget ${WGET_OPT} ${WEB_DOTNET}/dotNetFx40_Full_setup.exe -P ${MICROSOFT_DOTNET_FRAMEWORK_INSTALLER_DIR}
 
-#<<<<<<< HEAD
-#temporarily disabling signing
-#wget ${WGET_OPT} ${WEB_DOTNET}/sign.bat -P ${REPO} && chmod a+x ${REPO}/sign.bat
-#echo @echo signing disabled > ${REPO}/sign.bat && chmod a+x ${REPO}/sign.bat
-#=======
-#
-cp ${DOTNET_LOC}/sign.bat ${REPO} && chmod a+x ${REPO}/sign.bat
-#>>>>>>> master
+wget ${WGET_OPT} -P "${REPO}" "${WEB_DOTNET}/sign.bat" && chmod a+x ${REPO}/sign.bat
 
 #bring in stuff from xencenter-ovf latest xe-phase-1
-wget ${WGET_OPT} ${WEB_XE_PHASE_1}/XenCenterOVF.zip -P ${SCRATCH_DIR}
+wget ${WGET_OPT} -P "${SCRATCH_DIR}" "${WEB_XE_PHASE_1}/XenCenterOVF.zip"
 ${UNZIP} -d ${REPO}/XenOvfApi ${SCRATCH_DIR}/XenCenterOVF.zip
 
 #bring manifest from latest xe-phase-1
-wget ${WGET_OPT} ${WEB_XE_PHASE_1}/manifest -O ${SCRATCH_DIR}/xe-phase-1-manifest
+wget ${WGET_OPT} -O ${SCRATCH_DIR}/xe-phase-1-manifest "${WEB_XE_PHASE_1}/manifest"
 
 #bring XenServer.NET from latest xe-phase-2
-wget ${WGET_VERBOSE_OPT} ${WEB_XE_PHASE_2}/XenServer-SDK.zip -P ${REPO} && ${UNZIP} -j ${REPO}/XenServer-SDK.zip XenServer-SDK/XenServer.NET/bin/XenServer.dll XenServer-SDK/XenServer.NET/bin/CookComputing.XmlRpcV2.dll -d ${REPO}/XenServer.NET
+wget ${WGET_OPT} -P "${REPO}" "${WEB_XE_PHASE_2}/XenServer-SDK.zip" && ${UNZIP} -j ${REPO}/XenServer-SDK.zip XenServer-SDK/XenServer.NET/bin/XenServer.dll XenServer-SDK/XenServer.NET/bin/CookComputing.XmlRpcV2.dll -d ${REPO}/XenServer.NET
 
 #bring in some more libraries
-mkdir_clean ${REPO}/NUnit && wget ${WEB_LIB}/{nunit.framework.dll,Moq_dotnet4.dll} -P ${REPO}/NUnit
-mv ${REPO}/NUnit/Moq_dotnet4.dll ${REPO}/NUnit/Moq.dll
-wget ${WGET_OPT} ${WEB_LIB}/{wix3.5.2519.0-sources.zip,wix3.5.2519.0-binaries.zip} -P ${SCRATCH_DIR}
+mkdir_clean ${REPO}/NUnit
+wget ${WGET_OPT} -P ${REPO}/NUnit ${WEB_LIB}/nunit.framework.dll 
+wget ${WGET_OPT} -O ${REPO}/NUnit/Moq.dll ${WEB_LIB}/Moq_dotnet4.dll 
+wget ${WGET_OPT} -P ${SCRATCH_DIR} ${WEB_LIB}/{wix3.5.2519.0-sources.zip,wix3.5.2519.0-binaries.zip}
 
 #set version numbers and brand info
 
@@ -191,22 +182,14 @@ version_brand_csharp "XenAdmin CommandLib XenCenterLib XenModel XenOvfApi XenOvf
 
 #build
 
-run_msbuild()
-{
-  /cygdrive/c/WINDOWS/Microsoft.NET/Framework/v4.0.30319/MSBuild.exe /p:Configuration=Release /p:TargetFrameworkVersion=v4.0
-}
+MSBUILD="MSBuild.exe /nologo /m /verbosity:minimal /p:Configuration=Release /p:TargetFrameworkVersion=v4.0 /p:VisualStudioVersion=13.0"
 
-run_vcbuild()
-{
-  "/cygdrive/c/Program Files/Microsoft Visual Studio 9.0/VC/VCPackages/VCBuild.exe" $1 "Release|Win32"
-}
-
-cd ${REPO}/XenAdmin   && run_msbuild
-cd ${REPO}/Xe         && run_msbuild
-cd ${REPO}/xva_verify && run_msbuild
-cd ${REPO}/splash     && run_vcbuild "Splash.vcproj"
-cp ${REPO}/splash/XenAdmin/bin/Release/XenCenter.* ${REPO}/XenAdmin/bin/Release/
-cd ${REPO}/VNCControl && run_msbuild
+cd ${REPO}
+$MSBUILD XenAdmin.sln
+$MSBUILD xe/Xe.csproj
+$MSBUILD VNCControl/VNCControl.sln
+SOLUTIONDIR=$(cygpath.exe -w "${REPO}/XenAdmin")
+$MSBUILD /p:SolutionDir="$SOLUTIONDIR" splash/splash.vcxproj
 
 #sign (splash has already been signed through a post-build event)
 for file in XenCenter.exe XenCenterMain.exe CommandLib.dll MSTSCLib.dll XenCenterLib.dll XenCenterVNC.dll XenModel.dll XenOvf.dll XenOvfTransport.dll
@@ -232,9 +215,10 @@ done
 WIX=${REPO}/WixInstaller
 WIX_BIN=${WIX}/bin
 WIX_SRC=${SCRATCH_DIR}/wixsrc
-CANDLE=${WIX_BIN}/candle.exe
-LIT=${WIX_BIN}/lit.exe
-LIGHT=${WIX_BIN}/light.exe
+# ${WIX_BIN}/
+CANDLE="candle.exe -nologo"
+LIT="lit.exe -nologo"
+LIGHT="light.exe -nologo"
 
 mkdir_clean ${WIX_SRC}
 ${UNZIP} ${SCRATCH_DIR}/wix3.5.2519.0-sources.zip -d ${SCRATCH_DIR}/wixsrc
@@ -280,9 +264,9 @@ compile_installer()
   
   if [ "${name}" = "VNCControl" ]
   then
-   ${LIGHT} obj${name}/$1.wixobj lib/WixUI_InstallDir.wixlib -loc wixlib/wixui_$2.wxl -ext WiXNetFxExtension -out out${name}/${name}.msi
+   ${LIGHT} -nologo obj${name}/$1.wixobj lib/WixUI_InstallDir.wixlib -loc wixlib/wixui_$2.wxl -ext WiXNetFxExtension -out out${name}/${name}.msi
   else
-   ${LIGHT} obj${name}/$1.wixobj lib/WixUI_InstallDir.wixlib -loc wixlib/wixui_$2.wxl -loc $2.wxl -ext WiXNetFxExtension -out out${name}/${name}.msi
+   ${LIGHT} -nologo obj${name}/$1.wixobj lib/WixUI_InstallDir.wixlib -loc wixlib/wixui_$2.wxl -loc $2.wxl -ext WiXNetFxExtension -out out${name}/${name}.msi
   fi
 }
 
@@ -333,13 +317,13 @@ cd ${WIX} && chmod a+rw XenCenter.l10n.msi && ${REPO}/sign.bat XenCenter.l10n.ms
 
 #create bundle exe installers - msi installers embedded
 DOTNETINST=${REPO}/dotNetInstaller
-DOTNETINST_BIN='/cygdrive/c/Program Files/dotNetInstaller/Bin'
 cp ${MICROSOFT_DOTNET_FRAMEWORK_INSTALLER_DIR}/dotNetFx40_Full_setup.exe ${DOTNETINST}
 cp ${WIX}/outXenCenter/XenCenter.msi ${DOTNETINST}
 cp ${WIX}/XenCenter.l10n.msi ${DOTNETINST}
-cp "${DOTNETINST_BIN}"/* ${DOTNETINST}
-cd ${DOTNETINST} && "${DOTNETINST}/InstallerLinker.exe" "/Output:XenCenterSetup.exe" "/Template:dotNetInstaller.exe" "/Configuration:XenCenterSetupBootstrapper.xml" "/e+" "/v+"
-cd ${DOTNETINST} && "${DOTNETINST}/InstallerLinker.exe" "/Output:XenCenterSetup.l10n.exe" "/Template:dotNetInstaller.exe" "/Configuration:XenCenterSetupBootstrapper_l10n.xml" "/e+" "/v+"
+
+cp "$(which dotNetInstaller.exe)" ${DOTNETINST}
+cd ${DOTNETINST} && InstallerLinker.exe "/Output:XenCenterSetup.exe" "/Template:dotNetInstaller.exe" "/Configuration:XenCenterSetupBootstrapper.xml" "/e+" "/v+"
+cd ${DOTNETINST} && InstallerLinker.exe "/Output:XenCenterSetup.l10n.exe" "/Template:dotNetInstaller.exe" "/Configuration:XenCenterSetupBootstrapper_l10n.xml" "/e+" "/v+"
 
 sign_files()
 {
@@ -358,14 +342,15 @@ mv -f ${WIX}/vnccontrol.wxs.tmp ${WIX}/vnccontrol.wxs
 compile_installer "VNCControl" "en-us" && sign_msi "VNCControl"
 
 #build the tests
-cd ${REPO}/XenAdminTests && run_msbuild
+echo "INFO: Build the tests..."
+cd ${REPO}/XenAdminTests && $MSBUILD
 #this script is used by XenRT
 cp ${REPO}/mk/xenadmintests.sh ${REPO}/XenAdminTests/bin/Release/
 cp ${REPO}/XenAdmin/ReportViewer/* ${REPO}/XenAdminTests/bin/Release/
 cd ${REPO}/XenAdminTests/bin/ && tar -czf XenAdminTests.tgz ./Release
 
 #build the CFUValidator
-cd ${REPO}/CFUValidator && run_msbuild
+cd ${REPO}/CFUValidator && $MSBUILD
 cd ${REPO}/CFUValidator/bin/ && tar -czf CFUValidator.tgz ./Release
 
 #include resources script and collect the resources for translations
@@ -392,22 +377,22 @@ cp ${REPO}/XenAdmin/bin/Release/{XS56EFP1002,XS56E008,XS60E001,XS62E006}.xsupdat
    ${REPO}/VNCControl/bin/Release/VNCControl.pdb \
    ${OUTPUT_DIR}
 
-#create english iso files
+echo "INFO:	Create English iso files"
 ISO_DIR=${SCRATCH_DIR}/iso-staging
 mkdir_clean ${ISO_DIR}
 install -m 755 ${EN_CD_DIR}/XenCenterSetup.exe ${ISO_DIR}/XenCenterSetup.exe
 cp ${REPO}/mk/ISO_files/* ${ISO_DIR}
 cp ${EN_CD_DIR}/XenCenter.ico ${ISO_DIR}/XenCenter.ico
-mkisofs -J -r -v -hfs -probe -publisher "${COMPANY_NAME_LEGAL}" -p "${COMPANY_NAME_LEGAL}" -V "XenCenter" -o "${OUTPUT_DIR}/XenCenter.iso" "${ISO_DIR}"
+mkisofs -J -r -v -publisher "${COMPANY_NAME_LEGAL}" -p "${COMPANY_NAME_LEGAL}" -V "XenCenter" -o "${OUTPUT_DIR}/XenCenter.iso" "${ISO_DIR}"
 
-#create l10n iso file
+echo "INFO:	Create l10n iso file"
 L10N_ISO_DIR=${SCRATCH_DIR}/l10n-iso-staging
 mkdir_clean ${L10N_ISO_DIR}
 # -o root -g root 
 install -m 755 ${L10N_CD_DIR}/XenCenterSetup.l10n.exe ${L10N_ISO_DIR}/XenCenterSetup.exe
 cp ${REPO}/mk/ISO_files/* ${L10N_ISO_DIR}
 cp ${EN_CD_DIR}/XenCenter.ico ${L10N_ISO_DIR}/XenCenter.ico
-mkisofs -J -r -v -hfs -probe -publisher "${COMPANY_NAME_LEGAL}" -p "${COMPANY_NAME_LEGAL}" -V "XenCenter" -o "${OUTPUT_DIR}/XenCenter.l10n.iso" "${L10N_ISO_DIR}"
+mkisofs -J -r -v -publisher "${COMPANY_NAME_LEGAL}" -p "${COMPANY_NAME_LEGAL}" -V "XenCenter" -o "${OUTPUT_DIR}/XenCenter.l10n.iso" "${L10N_ISO_DIR}"
 
 # Create a tarball containing the XenCenter ISO, to be installed by the host installer
 # MAIN_PKG_DIR is our working directory, MAIN_PKG_ISO_SUBDIR is the pathname of the ISO
@@ -420,7 +405,7 @@ rm -rf ${OUTPUT_DIR}/PACKAGES.main/opt
 #bring in the pdbs from dotnet-packages latest build
 for pdb in CookComputing.XmlRpcV2.pdb DiscUtils.pdb ICSharpCode.SharpZipLib.pdb Ionic.Zip.pdb log4net.pdb
 do
-  cp ${DOTNET_LOC}/${pdb} ${OUTPUT_DIR}
+  wget ${WGET_OPT} -P "${OUTPUT_DIR}" "${WEB_DOTNET}/${pdb}"
 done
 
 #create manifest
@@ -430,9 +415,18 @@ cat ${SCRATCH_DIR}/xe-phase-1-manifest | grep xencenter-ovf >> ${OUTPUT_DIR}/man
 cat ${SCRATCH_DIR}/xe-phase-1-manifest | grep chroot-lenny >> ${OUTPUT_DIR}/manifest
 cat ${SCRATCH_DIR}/xe-phase-1-manifest | grep branding >> ${OUTPUT_DIR}/manifest
 cat ${SCRATCH_DIR}/dotnet-packages-manifest >> ${OUTPUT_DIR}/manifest
-echo /usr/groups/xen/carbon/windowsbuilds/WindowsBuilds/${get_JOB_NAME}/${BUILD_NUMBER} >> ${OUTPUT_DIR}/latest-successful-build
+if [ "${BUILD_KIND:+$BUILD_KIND}" = production ]
+then
+    echo ${get_BUILD_URL} >> ${OUTPUT_DIR}/latest-secure-build
+else
+    echo ${get_BUILD_URL} >> ${OUTPUT_DIR}/latest-successful-build
+fi
 
-echo "Build phase succeeded at "
+# Write out version information
+echo "xc_product_version=${XC_PRODUCT_VERSION}" >> ${OUTPUT_DIR}/xcversion
+echo "build_number=${BUILD_NUMBER}" >> ${OUTPUT_DIR}/xcversion
+
+echo "INFO:	Build phase succeeded at "
 date
 
 set +u

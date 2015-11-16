@@ -30,7 +30,7 @@
 
 set -eu
 
-#DISABLE_PUSH=1
+DISABLE_PUSH=1
 source "$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/declarations.sh"
 
 if [ ${XS_BRANCH} = "trunk" ]
@@ -54,7 +54,7 @@ then
 fi
 
 #update local xenadmin-ref.hg repository
-cp ${OUTPUT_DIR}/{manifest,latest-*-build} ${ROOT}/xenadmin-ref.hg
+cp ${OUTPUT_DIR}/{manifest,latest-*-build,xcversion} ${ROOT}/xenadmin-ref.hg
 cd ${ROOT}/xenadmin-ref.hg && hg commit -m "Latest successful build ${get_BUILD_ID}"
 
 if [ ${XS_BRANCH} = "trunk" ]

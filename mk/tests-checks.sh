@@ -46,8 +46,25 @@ ps -W -s | grep nunit  | cut -b-10 | xargs kill -f || true
 cp ${OUTPUT_DIR}/XenAdminTests.tgz ${TEST_DIR}
 cd ${TEST_DIR} && tar xzf XenAdminTests.tgz && chmod -R 777 Release
 
+
 set +e
-"/cygdrive/c/Program Files/NUnit 2.5.10/bin/net-2.0/nunit-console.exe" /process=separate /noshadow /labels /err="C:\cygwin\tmp\error.nunit.log" /timeout=40000 /output="C:\cygwin\tmp\output.nunit.log" /xml="C:\cygwin\tmp\XenAdminTests.xml" "C:\cygwin\tmp\Release\XenAdminTests.dll" "/framework=net-4.0" &
+
+{
+  # failure timeout COUNTE*DELAY = 600 seconds
+  COUNTER=60
+  DELAY=10
+  echo -en "INFO:       Aquiring GUI testing lock "
+  until [  $COUNTER -lt 1 ]; do
+     flock --conflict-exit-code 123 -w $DELAY 200
+     RESULT=$?
+     if [ "$RESULT" == "123" ]; then echo -n "."; fi
+     if [ "$?" != "0" ]; then echo "\nERROR:    Failed to aquire lock, timeout exceeded."; exit 1; fi
+     let COUNTER-=1
+  done
+
+  echo -e "\nINFO:	Lock aquired and starting execution"
+   # /output="$(cygpath -d ${TEST_DIR})\output.nunit.log"
+nunit-console /nologo /labels /stoponerror /nodots /process=separate /noshadow /labels /err="$(cygpath -d ${TEST_DIR})\error.nunit.log" /timeout=40000 /xml="$(cygpath -d ${TEST_DIR})\XenAdminTests.xml" "$(cygpath -d ${TEST_DIR})\Release\XenAdminTests.dll" "/framework=net-4.5" &
 
 pid=$!
 (sleep 3000 ; kill $pid 2>/dev/null ) &
@@ -57,6 +74,11 @@ if [ $? = 143 ]
 then
   echo "Tests were terminated due to 3000 timeout."
 fi
+
+  echo "INFO:   Done, releasing lock"
+  
+} 200>/tmp/busy-gui.log
+
 set -e
 
 sleeperpid2=$((ps | grep ${sleeperpid} | grep 'sleep$' | cut -b-10) || true)
