@@ -150,6 +150,9 @@
   <data name="LOCALE" xml:space="preserve">
     <value>en-US</value>
   </data>
+  <data name="LOG_FILENAME" xml:space="preserve">
+    <value>iCenter.log</value>
+  </data>
   <data name="MAINWINDOW_HELP_PARAMS" xml:space="preserve">
     <value>-mapid {0} {1}</value>
   </data>

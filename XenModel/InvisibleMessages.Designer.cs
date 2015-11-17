@@ -160,6 +160,15 @@ namespace XenAdmin {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to iCenter.log.
+        /// </summary>
+        public static string LOG_FILENAME {
+            get {
+                return ResourceManager.GetString("LOG_FILENAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to -mapid {0} {1}.
         /// </summary>
         public static string MAINWINDOW_HELP_PARAMS {
